@@ -1,0 +1,163 @@
+<html ng-app="MyApp">
+    <head>
+        <title>Inventory Sys</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"> </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+
+        <style>
+            .ng-enter{
+                transition: 1s;
+                opacity:0;
+            }
+            .ng-enter-active{
+                opacity:1;
+            }
+            .ng-leave{
+                transition:1s;
+                opacity:1;
+            }
+            .ng-leave-active{
+                opacity:0;
+            }
+        </style>
+    </head>
+    <body ng-controller="MyCtrl">
+
+        <h2>Inventory System</h2>
+        <product-dir></product-dir>
+        <br><br>
+
+        Product ID:
+        <input type="number" ng-model="id">
+        <br><br>
+
+        Product Name:
+        <input type="text" ng-model="name">
+        <br><br>
+
+        Quantity:
+        <input type="number" ng-model="quantity">
+        <br><br>
+
+        Price:
+        <input type="number" ng-model="price">
+        <br><br>
+    
+        <button ng-click="add()">Add</button>
+
+        <h3>Search Product </h3>
+        <br>
+
+        Product name:
+        <input ng-model="search" placeholder="search.....">
+        <br>
+
+        <h3>Product list</h3>
+
+        <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+        <tr ng-repeat="p in products | filter:search">
+            <td>{{p.id}}</td>
+            <td>{{p.name}}</td>
+            <td>{{p.quantity}}</td>
+            <td>{{p.price}}</td>
+            <td>
+                <button ng-click="delete(p)">Delete</button>
+                <button ng-click="update(p)">Update</button>
+            </td>
+        </tr>
+        </table>
+
+
+        <script>
+            var app=angular.module("MyApp",["ngAnimate"])
+
+            app.directive("productDir",function(){
+                return{
+                    template: "<p> Welcome to the Inventory Management Page</p>"
+                }
+            })
+
+            app.factory("ProductFactory",function(){
+                return{
+                    create: function(id,name,quantity,price)
+                    {
+                        return{
+                            id:id,
+                            name:name,
+                            quantity:quantity,
+                            price:price
+                        }
+                    }
+                }
+            })
+
+            app.service("ProductService",function(){
+                this.products=[];
+            })
+            app.controller("MyCtrl",function($scope,ProductService,ProductFactory)
+            {
+                $scope.products=ProductService.products;
+                $scope.editIndex=-1
+
+                $scope.add=function(){
+                    var exists=$scope.products.some(function(p){
+                        return p.id==$scope.id && $scope.products.indexOf(p)!=$scope.editIndex;
+                    })
+
+                    if(exists)
+                    {
+                        alert("ProductID alert exists")
+                        return;
+                    }
+
+                    if($scope.id && $scope.name && $scope.quantity>=0 && $scope.price>=0){
+                       var product=ProductFactory.create(
+                            $scope.id,
+                            $scope.name,
+                            $scope.quantity,
+                            $scope.price
+                        );
+
+                        if($scope.editIndex==-1){
+                            $scope.products.push(product);
+                        }
+                        else{
+                            $scope.products[$scope.editIndex]=product;
+                            $scope.editIndex=-1;
+                        }
+                        $scope.id=""
+                        $scope.name=""
+                        $scope.quantity=""
+                        $scope.price=""
+                    }
+                }
+                
+
+                $scope.delete=function(p){
+                    var index=$scope.products.indexOf(p);
+                    $scope.products.splice(index,1);
+                }
+
+                $scope.update=function(p)
+                {
+                                       
+                    $scope.editIndex=$scope.products.indexOf(p);
+
+                    $scope.id=p.id;
+                    $scope.name=p.name;
+                    $scope.quantity=p.quantity;
+                    $scope.price=p.price;
+                    
+                }
+
+            });
+        </script>
+    </body>
+</html>

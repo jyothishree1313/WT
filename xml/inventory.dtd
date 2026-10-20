@@ -1,0 +1,6 @@
+<!ELEMENT Inventory (product+)>
+<!ELEMENT product (id, name, quantity, price)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT quantity (#PCDATA)>
+<!ELEMENT price (#PCDATA)>

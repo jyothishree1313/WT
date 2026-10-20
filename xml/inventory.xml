@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog SYSTEM "books.dtd">
+<?xml-stylesheet type="text/css" href="inventory.css"?>
+
+<Inventory>
+  <product>
+    <id>303</id>
+    <name>Godbole</name>
+    <quantity>2</quantity>
+    <price>650.00</price>
+  </product>
+
+</Inventory>
